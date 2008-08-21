@@ -22,3 +22,8 @@
 	(let ((first (eval (first-operand exps) env)))
 	  (cons first rest)))))
 
+
+;; test
+;; left to right
+
+(l2r-list-of-values '((+ 1 2)) the-global-environment)

@@ -1,8 +1,6 @@
 ;; evalへの組込み->eval定義のcond節へ追加
-((and? exp) (eval-and exp env))
-((or? exp) (eval-or exp env))
 
-(define (adn? exp) (tagged-list? exp 'and))
+(define (and? exp) (tagged-list? exp 'and))
 (define (or? exp) (tagged-list? exp 'or))
 
 (define (and-seq exp) (cdr exp))

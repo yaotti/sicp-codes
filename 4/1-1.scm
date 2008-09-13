@@ -5,7 +5,7 @@
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
 	((variable? exp) (lookup-variable-value exp env))
-	((quoted? exp) (text-of-quatation exp))
+	((quoted? exp) (text-of-quotation exp))
 	((assignment? exp) (eval-assignment exp env))
 	((definition? exp) (eval-definition exp env))
 	((if? exp) (eval-if exp env))
@@ -25,7 +25,7 @@
 (define (apply procedure arguments)
   (cond ((primitive-procedure? procedure)
 	 (apply-primitive-procedure procedure arguments))
-	((commpound-procedure? procedure)
+	((compound-procedure? procedure)
 	 (eval-sequence
 	  (procedure-body procedure)
 	  (extend-environment
@@ -38,7 +38,7 @@
 
 ;; procedure arguments
 (define (list-of-values exps env)
-  (if (no-operands? exp)
+  (if (no-operands? exps)
       '()
       (cons (eval (first-operand exps) env)
 	    (list-of-values (rest-operands exps) env))))

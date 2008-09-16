@@ -13,7 +13,13 @@
 	;; ex 14
 	(list 'p print)
 	(list 'append append)
-	(list 'define define)
+	(list 'display display)
+	(list 'nl newline)
+	(list 'begin begin)
+	(list '> >)
+	(list '= =)
+	(list '< <)
+	(list 'list list)
 	(list 'm-map2 map)
 	(list 'm-func (lambda (proc arg1 arg2) (proc arg1 arg2)))
 	

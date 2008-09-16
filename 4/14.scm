@@ -1,14 +1,14 @@
+;; doesn't work
 (load "./evaluator.scm")
 (driver-loop)
-;; 超循環評価器内で以下を定義
+;; (1)超循環評価器内で以下を定義
 (define (iter rest result proc)
   (if (null? rest)
       result
-      (iter (cdr rest)
-	    (append result (list (proc (car rest))))
+      (iter (m-cdr rest)
+	    (append (list result) (list (proc (m-car rest))))
 	    proc)))
-(define (m-map1 proc elt)
-  (iter elt '() proc) the-global-environment)
+(define (m-map1 proc elt) (iter elt '() proc))
 (m-map1 square '(1 2 3))
 ;; =>iterが返される、評価してくれない
 ;; squareと同じになっているみたい
@@ -18,12 +18,25 @@ m-map1
 ;; => (compound-procedure (proc elt) (iter elt '() proc) <procedure-env>) 
 (iter '(1 2) '() square)
 ;; => *** ERROR: Unbound variable if
-(if true 1 2)
 ;; 関数定義の部分がうまくいってない
 
 
-;; 内部定義は無理なようなので外部で定義する
+;; test function
+(define (test a)
+  (if (> a 0)
+      'p
+      (set! a (+ a 1))))
+(test 1)
+;; => n
+(if (> 2 1)
+    'p
+    'n)
 
+;; unbound if
+
+
+
+;; (2)元のschemeのmapを使う
 ;; metacircularのprimitive-proceduresに以下を追加してみる
 (list 'm-map2 map)
 

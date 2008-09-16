@@ -21,6 +21,7 @@
   (tagged-list? p 'procedure))
 (define (procedure-parameters p) (cadr p))
 (define (procedure-body p) (caddr p))
+;;(define (procedure-body p) (list (caddr p))) ;;test
 (define (procedure-environment p) (cadddr p))
 
 
@@ -79,7 +80,7 @@
 
 (define (set-variable-value! var val env)
   (define (env-loop env)
-    (define (scan ars vals)
+    (define (scan vars vals)
       (cond [(null? vars)
 	     (env-loop (enclosing-environment env))]
 	    [(eq? var (car vars))
@@ -87,7 +88,7 @@
 	    [else (scan (cdr vars) (cdr vals))]))
     (if (eq? env the-empty-environment)
 	(error "Unbound variable -- SET!" var)
-	(let ((frame (first-env env)))
+	(let ((frame (first-frame env)))
 	  (scan (frame-variables frame)
 		(frame-values frame)))))
   (env-loop env))

@@ -52,7 +52,7 @@
 ;; sequences
 (define (eval-sequence exps env)
   (cond ((last-exp? exps) (eval (first-exp exps) env))
-	(else (eval (first-exp exps) env)
+	(else (eval #?=(first-exp exps) env)
 	      (eval-sequence (rest-exps exps) env))))
 
 ;; assignments & definitions
@@ -60,10 +60,10 @@
   (set-variable-value! (assignment-variable exp)
 		       (eval (assignment-value exp) env)
 		       env)
-  'ok) ;;this value is inplementation-dependent 
+  'ok) ;;this value(ok) is inplementation-dependent 
 
 (define (eval-definition exp env)
   (define-variable! (definition-variable exp)
-                    (eval (definition-value exp) env)
-		    env)
+    (eval (definition-value exp) env)
+    env)
   'ok)

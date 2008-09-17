@@ -10,7 +10,6 @@
 	(list 'm-cons cons)
 	(list 'null? null?)
 	(list 'square (lambda (x) (* x x)))
-	;; ex 14
 	(list 'p print)
 	(list 'append append)
 	(list 'display display)
@@ -20,8 +19,10 @@
 	(list '= =)
 	(list '< <)
 	(list 'list list)
+	;; ex 14
 	(list 'm-map2 map)
-	(list 'm-func (lambda (proc arg1 arg2) (proc arg1 arg2)))
+	(list 'm-func (lambda (proc arg1 arg2) proc arg1 arg2))
+	;;(list 'm-func (lambda (proc arg1 arg2) (apply proc (list arg1 arg2))))
 	
 	))
 

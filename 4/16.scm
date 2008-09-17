@@ -1,5 +1,3 @@
-;; not check yet c answer.
-
 ;; a. modify `lookup-variable-value` to support `*unassigned*`
 (define (lookup-variable-value var env)
   (define (env-loop env)
@@ -64,6 +62,7 @@
     (define no (lambda (x) x))
     (* (id x) (id x))))
 ;; output
+;; don't check the answer of c.
 (lambda (x)
   (let ((no *unassigned*)
 	(id *unassigned*))
@@ -106,3 +105,8 @@
 ;; procedure-bodyがよい
 ;; 理由：内部手続きの評価を遅らせることができる
 ;; 手続き作成時ではなく、procedure-bodyを使う時まで評価されない
+
+;; 以下解答より
+;; make-procedureがよい
+;; procedure-bodyは1つの手続きを作成した後、複数回呼ばれ(う)るが、
+;; make-procedureは一度しか呼ばれないから

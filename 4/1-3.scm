@@ -21,7 +21,6 @@
   (tagged-list? p 'procedure))
 (define (procedure-parameters p) (cadr p))
 (define (procedure-body p) (caddr p))
-;;(define (procedure-body p) (list (caddr p))) ;;test
 (define (procedure-environment p) (cadddr p))
 
 

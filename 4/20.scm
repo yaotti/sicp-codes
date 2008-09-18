@@ -47,14 +47,14 @@ a.導出された式としてletrecを定義
                         (if (= n 0)
                             false
                             (even? (- n 1))))))
-		'<REST OF BODY>))
+		"<REST OF BODY>"))
 ;; output
 (let ((even? #0='*unassigned*)
       (odd? #0#))
   (set! even? (lambda (n)
 		(if (= n 0) true (odd? (- n 1)))))
   (set! odd? (lambda (n) (if (= n 0) false (even? (- n 1)))))
-  '<REST OF BODY>)
+  "<REST OF BODY>")
 
 
 b.困難の理由は、defineはそのブロック全てを見るが、letは逐次である、ということ。

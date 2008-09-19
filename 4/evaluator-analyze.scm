@@ -88,5 +88,3 @@
 			      (procedure-environment proc))))
 	(else (error "Unknown procedure type -- EXECUTE-APPLICATION"
 	  proc))))
-
-(driver-loop)

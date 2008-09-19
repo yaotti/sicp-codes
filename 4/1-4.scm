@@ -18,12 +18,15 @@
 	(list '> >)
 	(list '= =)
 	(list '< <)
+	(list '<= <=)
+	(list '>= >=)
 	(list 'list list)
 	;; ex 14
 	(list 'm-map2 map)
 	(list 'm-func (lambda (proc arg1 arg2) (proc arg1 arg2)))
 	;;(list 'm-func (lambda (proc arg1 arg2) (apply proc (list arg1 arg2))))
-	
+	;; ex 24
+	(list 'exit exit)
 	))
 
 (define (primitive-procedure-names)
@@ -78,3 +81,6 @@
 		     (procedure-body object)
 		     '<procedure-env>))
       (display object)))
+
+
+

@@ -15,6 +15,8 @@
 			 env))
 	((begin? exp) (eval-sequence (begin-actions exp) env))
 	((cond? exp) (eval (cond->if exp) env))
+	;; ex 25
+	;;((unless? exp) (eval (unless->if exp) env))
 	((application? exp)
 	 (apply (eval (operator exp) env)
 		(list-of-values (operands exp) env))) ;;手続きと引数列共に評価

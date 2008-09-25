@@ -1,0 +1,2 @@
+stream-consと遅延評価器のconsの違いは, 後者ではcar部の評価も遅らせること.
+これならstreamにおいて, car部が無限リストになるようなcons cellも扱うことができる.

@@ -8,15 +8,16 @@
 
 (define (actual-value exp env)
   (force-it (eval exp env)))
+
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
 	((variable? exp) (lookup-variable-value exp env))
-	((quoted? exp) (text-of-quotation exp))
+	((quoted? exp) (text-of-quotation exp env))
 	((assignment? exp) (eval-assignment exp env))
 	((definition? exp) (eval-definition exp env))
 	((if? exp) (eval-if exp env))
 	((lambda? exp)
-	 (make-procedure (lambda-parameters exp)
+	 #?=(make-procedure (lambda-parameters exp)
 			 (lambda-body exp)
 			 env))
 	((begin? exp) (eval-sequence (begin-actions exp) env))
@@ -107,3 +108,9 @@
 ;;   (if (thunk? obj)
 ;;       (actual-value (thunk-exp obj) (thunk-env obj))
 ;;       obj))
+
+;; ex.30
+(define (eval-sequence exps env)
+  (cond ((last-exp? exps) (eval (first-exp exps) env))
+	(else (actual-value (first-exp exps) env)
+	      (eval-sequence (rest-exps exps) env))))

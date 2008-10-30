@@ -1,4 +1,8 @@
-(define (eval exp evn)
+(define apply-in-underlying-scheme (with-module gauche apply))
+(load "../1-2.scm")
+(load "../1-3.scm")
+(load "../1-4.scm")
+(define (eval exp env)
   ((analyze exp) env))
 
 (define (analyze exp)
@@ -19,16 +23,13 @@
 (define (analyze-self-evaluating exp)
   (lambda (env) exp))
 
-;; For a quoted expression, we can gain a little efficiency by extracting
-;; the text of the quotation only once, in the analysis phase, rather than in the execution phase.
-;;??
-
 (define (analyze-quoted exp)
   (let ((qval (text-of-quotation exp)))
     (lambda (env) qval)))
 
 (define (analyze-variable exp)
   (lambda (env) (lookup-variable-value exp env)))
+
 (define (analyze-assignment exp)
   (let ((var (assignment-variable exp))
 	(vproc (analyze (assignment-value exp))))
@@ -57,8 +58,6 @@
 	(bproc (analyze-sequence (lambda-body exp))))
     (lambda (env) (make-procedure vars bproc env))))
 
-
-
 (define (analyze-sequence exps)
   (define (sequentially proc1 proc2)
     (lambda (env) (proc1 env) (proc2 env)))
@@ -71,24 +70,6 @@
     (if (null? procs)
 	(error "Empty sequence -- ANALYZE"))
     (loop (car procs) (cdr procs)))) ;; 2.
-;; analyze-sequenceは何をしているか?
-;; 流れ
-;;expsを(list exp1 exp2 exp3)とする
-;;(analyze exp1)をexp1'とおく
-(loop (lambda (env) (exp1' env) (exp2' env))
-      exp3')
-;;=>
-(loop (lambda (env)
-	((lambda (env) (exp1' env) (exp2' env)) env)
-	(exp3' env))
-      '())
-;;=>
-(lambda (env)
-	((lambda (env) (exp1' env) (exp2' env)) env)
-	(exp3' env))
-;;引数にenvを与えると,expsそれぞれがenvを引数として評価され,返すのは最後の評価結果.
-;;それ以外の評価結果は捨てられる.
-
 
 (define (analyze-application exp)
   (let ((fproc (analyze (operator exp)))
@@ -106,7 +87,5 @@
 	  (extend-environment (procedure-parameters proc)
 			      args
 			      (procedure-environment proc))))
-	(else
-	 (error
-	  "Unknown procedure type -- EXECUTE-APPLICATION"
+	(else (error "Unknown procedure type -- EXECUTE-APPLICATION"
 	  proc))))

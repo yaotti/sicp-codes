@@ -1,0 +1,97 @@
+;; inputが(amb 1 2 3)の時を考える．
+
+(ambeval input
+	 the-global-environment
+	 (lambda (val next-alternative)
+	   (announce-output output-prompt)
+	   (user-print val)
+	   (internal-loop next-alternative))
+	 (lambda ()
+	   (announce-output
+	    ";;; There are no more values of")
+	   (user-print input)
+	   (driver-loop)))
+=>
+((analyze exp) the-global-environment
+ (lambda (val next-alternative) ...)
+ (lambda () ...))
+;; (analyze exp)を追う．
+=>
+amb?でtrue.
+(analyze-amb (amb 1 2 3))
+
+;; 定義を参考に
+(define (analyze-amb exp)
+  (let ((cprocs (map analyze (amb-choices exp))))
+    (lambda (env succeed fail)
+      (define (try-next choices)
+	(if (null? choices)
+	    (fail)
+	    ((car choices) env
+	     succeed
+	     (lambda ()
+	       (try-next (cdr choices))))))
+      (try-next cprocs))))
+=>
+amb-choicesは(1 2 3)
+cprocsは(map analyze (1 2 3))
+;; (map analyze (1 2 3))を追う
+=> (analyze 1)
+;; self-evaluating?がtrue
+=>
+(analyze-self-evaluating 1)
+=>
+(lambda (env succeed fail)
+  (succeed 1 fail))
+を返す．
+
+よって(map analyze (1 2 3))，つまりcprocsは
+((lambda (env succeed fail)
+   (succeed 1 fail))
+ (lambda (env succeed fail)
+   (succeed 2 fail))
+ (lambda (env succeed fail)
+   (succeed 3 fail)))
+になる．
+
+(lambda (env succeed fail)
+  (try-next cprocs))
+
+cprocsをcarから順にチェックしていく.
+まずtry-nextのifはfalse．
+((car choices) env
+ succeed
+ (lambda ()
+   (try-next (cdr choices))))
+=>
+(lambda (env succeed fail)
+  ((lambda (env succeed fail)
+     (succeed 1 fail)) env
+     succeed (lambda ()
+	       (try-next (...))))) ;;引数は2, 3の関数のリスト
+=>
+(lambda (env succeed fail)
+  (succeed 1 (lambda ()
+	       (try-next (...)))))
+
+=>
+;; ambevalに戻る．
+((lambda (env succeed fail)
+   (succeed 1 (lambda ()
+		(try-next (...)))))
+ the-global-environment
+ (lambda (val next-alternative) ...)
+ (lambda () ...))
+=>
+;; succeed
+((lambda (val next-alternative)
+   (announce-output output-prompt)
+   (user-print val)
+   (internal-loop next-alternative))
+ 1
+ (lambda ()
+   (try-next (...))))
+
+1を表示したのち，internal-loopに(try-next (...))を渡してdriver-loop.
+(try-nextの引数は2,3の手続き．)
+

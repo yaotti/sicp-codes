@@ -1,0 +1,30 @@
+(define (test)
+  (let ((a 1))
+    (+ a 2)))
+
+の流れを考える．(なぜかエラー)
+*** ERROR: Unknown procedure type -- EXECUTE-APPLICATION 1
+
+;; letがエラーの原因らしい．
+
+(define (test)
+  (let ((a 1))
+    (+ a 2)))
+(test)
+
+
+;; 以下の変更を加えるとうまくいった．
+(define (let-body exp)
+  (cddr exp)) ;;caddrから変更
+(define (let->combination exp)
+  (cons
+   (make-lambda (map car (let-binds exp))
+		(let-body exp))
+   (map cadr (let-binds exp))))	;;cdrから変更
+
+
+
+
+しかしrequireがうまくいかない．
+どこで定義する?
+driver-loopでは定義できない→なぜ?

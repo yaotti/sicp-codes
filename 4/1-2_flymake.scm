@@ -8,7 +8,7 @@
 ;; 	[else false])
   (cond [(number? exp) #t]
 	[(string? exp) #t]
-	[else #f])
+	[else ])
   )
 
 ;; variables are represented by symbols

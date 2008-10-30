@@ -3,9 +3,11 @@
 
 ;; testing of predicates
 (define (true? x)
-  (not (eq? x false)))
+  ;;(not (eq? x false)))
+  (not (eq? x #f)))
 (define (false? x)
-  (eq? x false))
+  ;;(eq? x false))
+  (eq? x #f))
 
 ;(apply-primitive-procedure <proc> <args>)
 ;(primitive-procedure? <proc>)

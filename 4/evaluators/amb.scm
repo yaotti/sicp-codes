@@ -6,9 +6,8 @@
 (load "../1-3.scm")
 (load "../1-4.scm")
 
-;; おそらく不要
-;; (define (eval exp env)
-;;   ((analyze exp) env))
+;; gaucheのrequireを隠す
+(define require '())
 
 (define (analyze exp)
   (cond ((self-evaluating? exp)
@@ -23,8 +22,7 @@
 	((begin? exp) (analyze-sequence (begin-actions exp)))
 	((cond? exp) (analyze (cond->if exp)))
 	((amb? exp) (analyze-amb exp)) ;; modify
-	;; right?
-	(#?=(require? #?=exp) (require exp))
+	((require? exp) (require exp))
 	((application? exp) (analyze-application exp))
 	(else
 	 (error "Unknown expression type -- ANALYZE" exp))))
@@ -124,7 +122,7 @@
   (let ((var (assignment-variable exp))
 	(val (analyze (assignment-value exp))))
     (lambda (env succeed fail)
-      (vproc env
+      (val env
 	     (lambda (val fail2)
 	       (let ((old-value
 		      (lookup-variable-value var env)))
@@ -138,7 +136,7 @@
 	     fail))))
 
 (define (analyze-application exp)
-  (let ((pproc #?=(analyze #?=(operator exp)))
+  (let ((pproc (analyze (operator exp)))
 	(aprocs (map analyze (operands exp))))
     (lambda (env succeed fail)
       (pproc env
@@ -147,7 +145,7 @@
 			 env
 			 (lambda (args fail3)
 			   (execute-application
-			    proc #?=args succeed fail3))
+			    proc args succeed fail3))
 			 fail2))
 	     fail))))
 
@@ -168,7 +166,7 @@
        fail)))
 
 (define (execute-application proc args succeed fail)
-  (cond ((primitive-procedure? #?=proc)
+  (cond ((primitive-procedure? proc)
 	 (succeed (apply-primitive-procedure proc args)
 		  fail))
 	((compound-procedure? proc)
@@ -228,3 +226,5 @@
      (display ";;; There is no current problem")
      (driver-loop))))
 
+;; (define (amb . args)
+;;   ())

@@ -1,9 +1,9 @@
-;; not checked
+;;(son father son)
 
-(rule (grandson ?s ?g)
-      (and (son ?s ?f)
-	   (son ?f ?g)))
+(rule (grandson ?g ?s)
+      (and (son ?f ?s)
+	   (son ?g ?f)))
 
-(rule (son2 ?s ?m)
-      (and (wife ?w ?m)
-	   (son ?s ?w)))
+(rule (son2 ?m ?s)
+      (and (wife ?m ?w)
+	   (son ?w ?s)))

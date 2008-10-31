@@ -1,4 +1,3 @@
-;; not checked yet
 (define (a-pythagorean-triple-between low high)
   (let ((i (an-integer-between low high))
 	(hsq (square high)))

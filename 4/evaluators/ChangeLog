@@ -1,0 +1,8 @@
+2008-10-31  Hiroshige Umino  <yaotti@gmail.com>
+
+	* parser.scm:
+	**memo
+	□parse-sentenceまで到達していない=>parseの定義ができてない?
+	ambの定義をしていない．
+	
+

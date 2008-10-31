@@ -1,4 +1,4 @@
-;; not checked
+;; maybe correct:p
 全てのパターンと，その時のフレームの組が必要．
 パターンではなくruleでも良いかもしれない．
 

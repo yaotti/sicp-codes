@@ -1,0 +1,19 @@
+2008-11-06  Hiroshige Umino  <yaotti@gmail.com>
+
+	* 4-4.scm: varのいみ
+
+2008-11-01  Hiroshige Umino  <yaotti@gmail.com>
+
+	* 4-4.scm
+	(qeval):
+	■ここで言う特殊形式というのは何?
+	andやor，notなど．(put 'and 'qeval conjoin)などとしておく．
+
+	(simple-query):
+	□(stream-append-delayed ...)の引数部分
+	*(find-assertion ...)は全表明に対してパターンをマッチ&拡張フレームのストリームを作る
+	*(apply-rules ...)可能な規則を全て作用させて拡張されたフレームのもう1つ(?)のストリームを作る
+	*後者はユニフィケーション?
+
+	(lisp-value):
+	□(instantinate ...)が何をしているか．

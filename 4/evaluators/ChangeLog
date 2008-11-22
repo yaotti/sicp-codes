@@ -1,8 +1,17 @@
+2008-11-20  Hiroshige Umino  <yaotti@gmail.com>
+
+	* query-system.scm:
+	□stream-append-delayedにて，(stream-null? s1)でエラー．
+	*** ERROR: attempt to stream-cons onto non-stream
+	stream-consにてstreamでないものが引数に．
+
+	
+
 2008-10-31  Hiroshige Umino  <yaotti@gmail.com>
 
 	* parser.scm:
 	**memo
-	□parse-sentenceまで到達していない=>parseの定義ができてない?
+	■parse-sentenceまで到達していない=>parseの定義ができてない?
 	ambの定義をしていない．
 	
 

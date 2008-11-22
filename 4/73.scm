@@ -1,0 +1,1 @@
+もしdelayを使わなければ，引数のstreamが無限ストリームだったときflatten-streamの呼び出しが止まらないため．

@@ -124,6 +124,12 @@
   (stream-flatmap (lambda (datum)
 		    (check-an-assertion datum pattern frame))
 		  (fetch-assertions pattern frame)))
+(define (check-an-assertion assertion query-pat query-frame)
+  (let ((match-result
+	 (pattern-match query-pat assertion query-frame)))
+    (if (eq? match-result 'failed)
+	the-empty-stream
+	(singleton-stream match-result))))
 
 (define (pattern-match pat dat frame)
   (cond ((eq? frame 'failed) 'faild)
@@ -218,74 +224,3 @@
 	  (else false)))
   (tree-walk exp))
 
-;; 4.4.4.5 Maintaining the Data base
-
-(define THE-ASSERTIONS the-empty-stream)
-
-(define (fetch-assertions pattern frame)
-  (if (use-index? pattern)
-      (get-indexed-assertions pattern)
-      (get-all-assertions)))
-
-(define (get-all-assertions) THE-ASSERTIONS)
-
-(define (get-indexed-assertions pattern)
-  (get-stream (index-key-of pattern) 'assertion-stream))
-
-(define (get-stream key1 key2)
-  (let ((s (get key1 key2)))
-    (if s s the-empty-stream)))
-
-
-(define THE-RULES the-empty-stream)
-
-(define (fetch-rules pattern frame)
-  (if (use-index? pattern)
-      (get-indexed-rules pattern)
-      (get-all-rules)))
-
-(define (get-all-rules) THE-RULES)
-
-(define (get-indexed-rules pattern)
-  (stream-append
-   (get-stream (index-key-of pattern) 'rule-stream)
-   (get-stream '? 'rule-stream)))
-
-
-(define (add-rule-or-assertion! assertion)
-  (if (rule? assertion)
-      (add-rule! assertion)
-      (add-assertion! assertion)))
-
-(define (add-assertion! assertion)
-  (store-assertion-in-index assertion)
-  (let ((old-assertions THE-ASSERTIONS))
-    (set! THE-ASSERTIONS
-	  (stream-cons assertion old-assertions))
-    'ok))
-
-(define (add-rule! rule)
-  (store-rule-in-index rule)
-  (let ((old-rules THE-RULES))
-    (set! THE-RULES (cons-stream rule old-rules))
-    'ok))
-
-(define (store-assertion-in-index assertion)
-  (if (indexable? assertion)
-      (let ((key (index-key-of assertion)))
-	(let ((current-assertion-stream
-	       (get-stream key 'assertion-stream)))
-	  (put key
-	       'assertion-stream
-	       (cons-stream assertion
-			    current-assertion-stream))))))
-
-
-(define (store-rule-in-index rule)
-  (if (indexable? rule)
-      (let ((key (index-key-of rule)))
-	(let ((current-rule-stream
-	       (get-stream key 'rule-stream)))
-	  (put key
-	       'rule-stream
-	       (cons-stream rule
